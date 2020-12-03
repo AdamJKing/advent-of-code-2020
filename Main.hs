@@ -7,12 +7,18 @@ import DayOne
     find2NumbersAddingTo,
     find3NumbersAddingTo,
   )
-import DayTwo (testPassword, dayTwoInput, parseLine)
+import DayTwo
+  ( dayTwoInput,
+    parseLine,
+    testPassword,
+    testPassword',
+  )
 
 sumWhen :: (Foldable t, Functor t) => (a -> Bool) -> t a -> Int
-sumWhen f = sum . fmap (inc . f) 
-  where inc True = 1
-        inc False = 0
+sumWhen f = sum . fmap (inc . f)
+  where
+    inc True = 1
+    inc False = 0
 
 main :: IO ()
 main = do
@@ -27,6 +33,7 @@ main = do
   inputDayTwo <- dayTwoInput
   print "Day Two"
   case traverse parseLine inputDayTwo of
-    Right passwords ->
+    Right passwords -> do
       print ("Part One: " ++ show (sumWhen (uncurry testPassword) passwords))
+      print ("Part Two: " ++ show (sumWhen (uncurry testPassword') passwords))
     Left err -> print $ "Could not parse input for Day Two: " ++ err

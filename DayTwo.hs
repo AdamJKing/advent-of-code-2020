@@ -27,6 +27,12 @@ testPassword ((mn, mx), req) pass =
   let count = LBC.count req pass
    in (mn <= count && count <= mx)
 
+testPassword' :: RuleSet -> Password -> Bool
+testPassword' ((x, y), req) pass = 
+  let inX = req == LBC.index pass (x - 1) 
+      inY = req == LBC.index pass (y - 1)
+  in inX /= inY
+
 parseLine :: LB.ByteString -> Either String (RuleSet, Password)
 parseLine =
   eitherResult

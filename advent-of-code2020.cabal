@@ -21,7 +21,7 @@ executable advent-of-code2020
   -- other-extensions:
   build-depends:       
       base >=4.13 && <4.15
-    , bytestring
+    , bytestring < 11.0
     , containers
     , attoparsec
   -- hs-source-dirs:
