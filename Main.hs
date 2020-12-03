@@ -1,36 +1,18 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE StrictData #-}
-
 module Main where
 
-import qualified Data.ByteString.Lazy as LB
-import qualified Data.ByteString.Lazy.Char8 as LB
 import Data.Maybe (fromJust)
-import Data.Sequence as Seq (Seq(Empty, (:<|), (:|>)), sort, unfoldr)
+import Data.Sequence as Seq (sort)
+import DayOne
+  ( dayOneInput,
+    find2NumbersAddingTo,
+    find3NumbersAddingTo,
+  )
+import DayTwo (testPassword, dayTwoInput, parseLine)
 
-dayOneInput :: IO (Seq Int)
-dayOneInput = do
-  contents <- LB.readFile "data/day_one_input.txt"
-  let f chunk = do
-        (int, rest) <- LB.readInt chunk
-        return (int, LB.drop 1 rest)
-
-  return (Seq.unfoldr f contents)
-
-find2NumbersAddingTo :: Int -> Seq Int -> Maybe (Int, Int)
-find2NumbersAddingTo n (l :<| (ns :|> r)) =
-  case compare (l + r) n of
-    EQ -> Just (l, r)
-    LT -> find2NumbersAddingTo n (ns :|> r)
-    GT -> find2NumbersAddingTo n (l :<| ns)
-find2NumbersAddingTo _ _ = Nothing
-
-find3NumbersAddingTo :: Int -> Seq Int -> Maybe (Int, Int, Int)
-find3NumbersAddingTo _ Seq.Empty = Nothing
-find3NumbersAddingTo n (x :<| ns) =
-  case find2NumbersAddingTo (n - x) ns of
-    Just (y, z) -> Just (x, y, z)
-    Nothing -> find3NumbersAddingTo n ns
+sumWhen :: (Foldable t, Functor t) => (a -> Bool) -> t a -> Int
+sumWhen f = sum . fmap (inc . f) 
+  where inc True = 1
+        inc False = 0
 
 main :: IO ()
 main = do
@@ -41,3 +23,10 @@ main = do
 
   let (x, y, z) = fromJust $ find3NumbersAddingTo 2020 inputDayOne
   print ("Part Two: " ++ show (x * y * z))
+
+  inputDayTwo <- dayTwoInput
+  print "Day Two"
+  case traverse parseLine inputDayTwo of
+    Right passwords ->
+      print ("Part One: " ++ show (sumWhen (uncurry testPassword) passwords))
+    Left err -> print $ "Could not parse input for Day Two: " ++ err
