@@ -2,9 +2,10 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module DayThree (Cell (Space, Tree), Map, dayThreeInput, index) where
+module DayThree (Cell (Space, Tree), Map, dayThreeInput, index, checkSlopes) where
 
 import qualified Data.ByteString.Lazy.Char8 as LB
+import Data.Function (fix)
 import Data.Vector (Vector)
 import qualified Data.Vector as Vec
 
@@ -35,6 +36,16 @@ dayThreeInput = do
   let knownSize = 10044 -- 30 width * 324 length
   let knownWidth = 31
   readMap knownWidth knownSize <$> LB.readFile "data/day_three_input.txt"
+
+checkSlopes :: Map -> (Int, Int) -> Int
+checkSlopes world gradient =
+  flip fix (0, (0, 0)) $ \loop (n, ix) ->
+    case index world ix of
+      Just Space -> loop (n, ix `add` gradient)
+      Just Tree -> loop (n + 1, ix `add` gradient)
+      Nothing -> n
+  where
+    add (x, y) (x', y') = (x + x', y + y')
 
 readMap :: Int -> Int -> LB.ByteString -> Map
 readMap width size contents = do

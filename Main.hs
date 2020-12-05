@@ -1,6 +1,5 @@
 module Main where
 
-import Data.Function (fix)
 import Data.Maybe (fromJust)
 import Data.Sequence as Seq (sort)
 import DayOne
@@ -8,7 +7,7 @@ import DayOne
     find2NumbersAddingTo,
     find3NumbersAddingTo,
   )
-import DayThree (Cell (..), dayThreeInput, index)
+import DayThree (checkSlopes, dayThreeInput)
 import DayTwo
   ( dayTwoInput,
     parseLine,
@@ -42,10 +41,5 @@ main = do
 
   inputDayThree <- dayThreeInput
   print "Day Three"
-  let numTrees = flip fix (0, (0, 0)) $ \loop (n, (x, y)) ->
-        case index inputDayThree (x, y) of
-          Just Space -> loop (n, (x + 3, y + 1))
-          Just Tree -> loop (n + 1, (x + 3, y + 1))
-          Nothing -> n
-
-  print ("Part One: " ++ show numTrees)
+  print ("Part One: " ++ show (checkSlopes inputDayThree (3, 1)))
+  print ("Part Two: " ++ show (product $ checkSlopes inputDayThree <$> [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]))
