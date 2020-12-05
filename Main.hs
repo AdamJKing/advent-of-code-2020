@@ -1,7 +1,9 @@
 module Main where
 
+import Data.Attoparsec.ByteString.Lazy (eitherResult, parse)
 import Data.Maybe (fromJust)
 import Data.Sequence as Seq (sort)
+import DayFour (dayFourInput, passportList, validPassport)
 import DayOne
   ( dayOneInput,
     find2NumbersAddingTo,
@@ -43,3 +45,9 @@ main = do
   print "Day Three"
   print ("Part One: " ++ show (checkSlopes inputDayThree (3, 1)))
   print ("Part Two: " ++ show (product $ checkSlopes inputDayThree <$> [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]))
+
+  inputDayFour <- dayFourInput
+  print "Day Four"
+  case eitherResult $ parse passportList inputDayFour of
+    Right passports -> print ("Part One:" ++ show (sumWhen validPassport passports))
+    Left err -> print $ "Could not parse input for Day Four: " ++ err
