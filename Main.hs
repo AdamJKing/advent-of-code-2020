@@ -3,9 +3,9 @@ module Main where
 import Data.Attoparsec.ByteString.Lazy (eitherResult, parse)
 import Data.Foldable (find)
 import qualified Data.IntSet as IntSet
-import qualified Data.Set as Set
 import Data.Maybe (fromJust)
 import Data.Sequence as Seq (sort)
+import qualified Data.Set as Set
 import DayFive (dayFiveInput, determineSeatId)
 import DayFour (dayFourInput, passportList, validPassport)
 import DayOne
@@ -69,5 +69,7 @@ main = do
   inputDaySix <- daySixInput
   print "Day Six"
   case eitherResult $ parse groups inputDaySix of
-    Right gs -> print ("Part One: " ++ show (sum (Set.size <$> gs)))
+    Right gs -> do
+      print "Part One: Invalidated by changes"
+      print ("Part Two: " ++ show (sum (Set.size <$> gs)))
     Left err -> print ("Issue with Day Six input: " ++ err)

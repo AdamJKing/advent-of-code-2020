@@ -9,9 +9,13 @@ daySixInput :: IO LB.ByteString
 daySixInput = LB.readFile "data/day_six_input.txt"
 
 group :: Parser (Set.Set Char)
-group = set (maybeNewline (notChar '\n'))
-  where
-    maybeNewline a = (a <* char '\n') <|> a
+group = do
+  p <- person
+  _ <- char '\n'
+  (Set.intersection p <$> group) <|> pure p
+
+person :: Parser (Set.Set Char)
+person = set (notChar '\n')
 
 groups :: Parser [Set.Set Char]
 groups = group `sepBy` char '\n'
