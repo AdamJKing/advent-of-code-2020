@@ -2,7 +2,8 @@ module Main where
 
 import Data.Attoparsec.ByteString.Lazy (eitherResult, parse)
 import Data.Foldable (find)
-import qualified Data.IntSet as Set
+import qualified Data.IntSet as IntSet
+import qualified Data.Set as Set
 import Data.Maybe (fromJust)
 import Data.Sequence as Seq (sort)
 import DayFive (dayFiveInput, determineSeatId)
@@ -12,6 +13,7 @@ import DayOne
     find2NumbersAddingTo,
     find3NumbersAddingTo,
   )
+import DaySix (daySixInput, groups)
 import DayThree (checkSlopes, dayThreeInput)
 import DayTwo
   ( dayTwoInput,
@@ -61,5 +63,11 @@ main = do
   let seatIds = determineSeatId <$> inputDayFive
   let maxSeatId = maximum seatIds
   print ("Part One: " ++ show maxSeatId)
-  let seatIds' = Set.fromList seatIds
-  print ("Part Two: " ++ show (find (not . (`Set.member` seatIds')) [(minimum seatIds) .. maxSeatId]))
+  let seatIds' = IntSet.fromList seatIds
+  print ("Part Two: " ++ show (find (not . (`IntSet.member` seatIds')) [(minimum seatIds) .. maxSeatId]))
+
+  inputDaySix <- daySixInput
+  print "Day Six"
+  case eitherResult $ parse groups inputDaySix of
+    Right gs -> print ("Part One: " ++ show (sum (Set.size <$> gs)))
+    Left err -> print ("Issue with Day Six input: " ++ err)
