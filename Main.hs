@@ -48,6 +48,7 @@ main = do
 
   inputDayFour <- dayFourInput
   print "Day Four"
+  print "Part One: Invalidated by changes"
   case eitherResult $ parse passportList inputDayFour of
-    Right passports -> print ("Part One:" ++ show (sumWhen validPassport passports))
+    Right passports -> print ("Part Two:" ++ show (sumWhen validPassport passports))
     Left err -> print $ "Could not parse input for Day Four: " ++ err
