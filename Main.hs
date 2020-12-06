@@ -1,8 +1,11 @@
 module Main where
 
 import Data.Attoparsec.ByteString.Lazy (eitherResult, parse)
+import Data.Foldable (find)
+import qualified Data.IntSet as Set
 import Data.Maybe (fromJust)
 import Data.Sequence as Seq (sort)
+import DayFive (dayFiveInput, determineSeatId)
 import DayFour (dayFourInput, passportList, validPassport)
 import DayOne
   ( dayOneInput,
@@ -52,3 +55,11 @@ main = do
   case eitherResult $ parse passportList inputDayFour of
     Right passports -> print ("Part Two:" ++ show (sumWhen validPassport passports))
     Left err -> print $ "Could not parse input for Day Four: " ++ err
+
+  inputDayFive <- dayFiveInput
+  print "Day Five"
+  let seatIds = determineSeatId <$> inputDayFive
+  let maxSeatId = maximum seatIds
+  print ("Part One: " ++ show maxSeatId)
+  let seatIds' = Set.fromList seatIds
+  print ("Part Two: " ++ show (find (not . (`Set.member` seatIds')) [(minimum seatIds) .. maxSeatId]))
