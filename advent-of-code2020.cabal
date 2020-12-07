@@ -22,12 +22,15 @@ executable advent-of-code2020
     , DayFour
     , DayFive
     , DaySix
+    , DaySeven
 
   build-depends:       
       base >=4.13 && <4.15
     , attoparsec
     , bytestring < 11.0
     , containers
+    , transformers
+    , mtl
     , vector
 
   default-language:    Haskell2010

@@ -21,6 +21,7 @@ import DayTwo
     testPassword,
     testPassword',
   )
+import DaySeven (countContaining, rules, daySevenInput)
 
 sumWhen :: (Foldable t, Functor t) => (a -> Bool) -> t a -> Int
 sumWhen f = sum . fmap (inc . f)
@@ -73,3 +74,9 @@ main = do
       print "Part One: Invalidated by changes"
       print ("Part Two: " ++ show (sum (Set.size <$> gs)))
     Left err -> print ("Issue with Day Six input: " ++ err)
+
+  inputDaySeven <- daySevenInput
+  print "Day Seven"
+  case eitherResult $ parse rules inputDaySeven of
+    Right bags -> print ("Part One: " ++ show (countContaining bags "shinygold"))
+    Left err -> print ("Issue with Day Seven Input: " ++ err)
