@@ -13,6 +13,7 @@ import DayOne
     find2NumbersAddingTo,
     find3NumbersAddingTo,
   )
+import DaySeven (countContaining, countNestedBags, daySevenInput, rules)
 import DaySix (daySixInput, groups)
 import DayThree (checkSlopes, dayThreeInput)
 import DayTwo
@@ -21,7 +22,6 @@ import DayTwo
     testPassword,
     testPassword',
   )
-import DaySeven (countContaining, rules, daySevenInput)
 
 sumWhen :: (Foldable t, Functor t) => (a -> Bool) -> t a -> Int
 sumWhen f = sum . fmap (inc . f)
@@ -78,5 +78,7 @@ main = do
   inputDaySeven <- daySevenInput
   print "Day Seven"
   case eitherResult $ parse rules inputDaySeven of
-    Right bags -> print ("Part One: " ++ show (countContaining bags "shinygold"))
+    Right bags -> do
+      print ("Part One: " ++ show (countContaining bags "shinygold"))
+      print ("Part Two: " ++ show (countNestedBags "shinygold" bags))
     Left err -> print ("Issue with Day Seven Input: " ++ err)

@@ -29,6 +29,8 @@ executable advent-of-code2020
     , attoparsec
     , bytestring < 11.0
     , containers
+    , fgl
+    , hashable
     , transformers
     , mtl
     , vector
