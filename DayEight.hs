@@ -48,6 +48,7 @@ run instructions' = go 0 0 []
           | NOP _ <- (Seq.index instructions' i) -> loop (i + 1) acc (i : visited)
           | (ACC delta) <- (Seq.index instructions' i) -> loop (i + 1) (acc + delta) (i : visited)
           | (JMP delta) <- (Seq.index instructions' i) -> loop (i + delta) acc (i : visited)
+          | otherwise -> Just acc
 
 fixInstructions :: Seq.Seq Instruction -> Maybe Int
 fixInstructions instructions' =

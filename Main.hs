@@ -6,9 +6,10 @@ import qualified Data.IntSet as IntSet
 import Data.Maybe (fromJust)
 import Data.Sequence as Seq (sort)
 import qualified Data.Set as Set
-import DayEight (run, dayEightInput, instructions)
+import DayEight (dayEightInput, fixInstructions, run)
 import DayFive (dayFiveInput, determineSeatId)
 import DayFour (dayFourInput, passportList, validPassport)
+import DayNine (dayNineInput, findInvalidInt)
 import DayOne
   ( dayOneInput,
     find2NumbersAddingTo,
@@ -86,4 +87,9 @@ main = do
 
   inputDayEight <- dayEightInput
   print "Day Eight"
-  print ("Part One: " ++ show (run inputDayEight))
+  print "Part One: Invalidated by changes"
+  print ("Part Two: " ++ show (fixInstructions inputDayEight))
+
+  inputDayNine <- dayNineInput
+  print "Day Nine"
+  print ("Part One: " ++ show (findInvalidInt 25 inputDayNine))
