@@ -9,7 +9,7 @@ import qualified Data.Set as Set
 import DayEight (dayEightInput, fixInstructions, run)
 import DayFive (dayFiveInput, determineSeatId)
 import DayFour (dayFourInput, passportList, validPassport)
-import DayNine (dayNineInput, findInvalidInt)
+import DayNine (dayNineInput, findContiguousSeqAddingTo, findInvalidInt)
 import DayOne
   ( dayOneInput,
     find2NumbersAddingTo,
@@ -93,3 +93,4 @@ main = do
   inputDayNine <- dayNineInput
   print "Day Nine"
   print ("Part One: " ++ show (findInvalidInt 25 inputDayNine))
+  print ("Part Two: " ++ show (findContiguousSeqAddingTo 177777905 inputDayNine))
