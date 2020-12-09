@@ -6,6 +6,7 @@ import qualified Data.IntSet as IntSet
 import Data.Maybe (fromJust)
 import Data.Sequence as Seq (sort)
 import qualified Data.Set as Set
+import DayEight (run, dayEightInput, instructions)
 import DayFive (dayFiveInput, determineSeatId)
 import DayFour (dayFourInput, passportList, validPassport)
 import DayOne
@@ -82,3 +83,7 @@ main = do
       print ("Part One: " ++ show (countContaining bags "shinygold"))
       print ("Part Two: " ++ show (countNestedBags "shinygold" bags))
     Left err -> print ("Issue with Day Seven Input: " ++ err)
+
+  inputDayEight <- dayEightInput
+  print "Day Eight"
+  print ("Part One: " ++ show (run inputDayEight))
