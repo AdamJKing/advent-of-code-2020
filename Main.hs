@@ -3,10 +3,12 @@ module Main where
 import Data.Attoparsec.ByteString.Lazy (eitherResult, parse)
 import Data.Foldable (find)
 import qualified Data.IntSet as IntSet
+import qualified Data.List as List
 import Data.Maybe (fromJust)
-import Data.Sequence as Seq (sort)
+import Data.Monoid (Sum (Sum))
+import qualified Data.Sequence as Seq (sort)
 import qualified Data.Set as Set
-import DayEight (dayEightInput, fixInstructions, run)
+import DayEight (dayEightInput, fixInstructions)
 import DayFive (dayFiveInput, determineSeatId)
 import DayFour (dayFourInput, passportList, validPassport)
 import DayNine (dayNineInput, findContiguousSeqAddingTo, findInvalidInt)
@@ -17,6 +19,7 @@ import DayOne
   )
 import DaySeven (countContaining, countNestedBags, daySevenInput, rules)
 import DaySix (daySixInput, groups)
+import DayTen (countJolts, dayTenInput, steps)
 import DayThree (checkSlopes, dayThreeInput)
 import DayTwo
   ( dayTwoInput,
@@ -94,3 +97,8 @@ main = do
   print "Day Nine"
   print ("Part One: " ++ show (findInvalidInt 25 inputDayNine))
   print ("Part Two: " ++ show (findContiguousSeqAddingTo 177777905 inputDayNine))
+
+  inputDayTen <- dayTenInput
+  print "Day Ten"
+  let (Sum jolts3, Sum jolts1) = countJolts (steps (List.sort inputDayTen))
+  print ("Part One: " ++ show (jolts1 * jolts3))

@@ -25,6 +25,7 @@ executable advent-of-code2020
     , DaySeven
     , DayEight
     , DayNine
+    , DayTen
 
   build-depends:       
       base >=4.13 && <4.15
