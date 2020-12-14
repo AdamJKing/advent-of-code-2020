@@ -1,4 +1,7 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module DayTen where
 
@@ -6,6 +9,10 @@ import Control.Arrow (Arrow ((&&&)))
 import Data.Attoparsec.ByteString.Char8 (char, decimal)
 import Data.Attoparsec.ByteString.Lazy (Result (Done), parse, sepBy)
 import qualified Data.ByteString.Lazy as LB
+import Data.Graph.Inductive (Graph (match, mkGraph), Node)
+import Data.Graph.Inductive.PatriciaTree (Gr)
+import Data.Ix (Ix (inRange))
+import Data.MemoTrie (memoFix)
 import Data.Monoid (Sum (..))
 
 dayTenInput :: IO [Int]
@@ -29,3 +36,30 @@ countWhen p a = if p a then pure 1 else mempty
 
 countJolts :: [Int] -> (Sum Int, Sum Int)
 countJolts = foldMap (countWhen (== 3) &&& countWhen (== 1))
+
+possibleAdapterConfigs :: [Int] -> Int
+possibleAdapterConfigs adapters =
+  let !configs = mkGraph nodes edges :: Gr () ()
+   in noPaths 0 mx configs
+  where
+    mx = 3 + maximum adapters
+    adapters' = 0 : mx : adapters
+
+    nodes = asNode <$> adapters'
+    edges = foldMap (\x -> asEdge x <$> filter (canLink x) adapters') adapters'
+
+    asNode n = (n, ())
+    asEdge a b = (a, b, ())
+
+    canLink from to = inRange (1, 3) (to - from)
+
+noPaths :: Graph gr => Node -> Node -> gr () () -> Int
+noPaths start end graph = memoFix (go graph) start
+  where
+    go gr recur start' =
+      case match start' gr of
+        (Just (_, n, _, children), _) ->
+          if n == end
+            then 1
+            else sum $ recur . snd <$> children
+        (Nothing, _) -> 0

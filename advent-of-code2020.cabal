@@ -11,7 +11,6 @@ author:              adamking
 -- copyright:
 -- category:
 build-type:          Simple
-extra-source-files:  CHANGELOG.md
 
 executable advent-of-code2020
   main-is:             Main.hs
@@ -35,6 +34,7 @@ executable advent-of-code2020
     , fgl
     , hashable
     , transformers
+    , MemoTrie
     , mtl
     , vector
 

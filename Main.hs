@@ -19,7 +19,7 @@ import DayOne
   )
 import DaySeven (countContaining, countNestedBags, daySevenInput, rules)
 import DaySix (daySixInput, groups)
-import DayTen (countJolts, dayTenInput, steps)
+import DayTen (countJolts, dayTenInput, possibleAdapterConfigs, steps)
 import DayThree (checkSlopes, dayThreeInput)
 import DayTwo
   ( dayTwoInput,
@@ -100,5 +100,7 @@ main = do
 
   inputDayTen <- dayTenInput
   print "Day Ten"
-  let (Sum jolts3, Sum jolts1) = countJolts (steps (List.sort inputDayTen))
+  let diffs = steps (List.sort inputDayTen)
+  let (Sum jolts3, Sum jolts1) = countJolts diffs
   print ("Part One: " ++ show (jolts1 * jolts3))
+  print ("Part Two: " ++ show (possibleAdapterConfigs inputDayTen))
