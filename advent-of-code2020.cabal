@@ -25,9 +25,11 @@ executable advent-of-code2020
     , DayEight
     , DayNine
     , DayTen
+    , DayEleven
 
   build-depends:       
       base >=4.13 && <4.15
+    , array
     , attoparsec
     , bytestring < 11.0
     , containers

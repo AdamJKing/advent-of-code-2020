@@ -9,6 +9,7 @@ import Data.Monoid (Sum (Sum))
 import qualified Data.Sequence as Seq (sort)
 import qualified Data.Set as Set
 import DayEight (dayEightInput, fixInstructions)
+import DayEleven (updateUntilStable, countOccupiedSeats, dayElevenInput)
 import DayFive (dayFiveInput, determineSeatId)
 import DayFour (dayFourInput, passportList, validPassport)
 import DayNine (dayNineInput, findContiguousSeqAddingTo, findInvalidInt)
@@ -104,3 +105,8 @@ main = do
   let (Sum jolts3, Sum jolts1) = countJolts diffs
   print ("Part One: " ++ show (jolts1 * jolts3))
   print ("Part Two: " ++ show (possibleAdapterConfigs inputDayTen))
+
+  inputDayEleven <- dayElevenInput
+  print "Day Eleven"
+
+  print ("Part One " ++ show (countOccupiedSeats (updateUntilStable inputDayEleven)))
