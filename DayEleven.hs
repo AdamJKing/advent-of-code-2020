@@ -1,16 +1,18 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TupleSections #-}
 
 module DayEleven where
 
 import Control.Monad (forM_)
+import Data.Bifunctor (Bifunctor (bimap))
 import qualified Data.ByteString.Char8 as B
+import Data.Foldable (asum)
 import Data.Function (fix)
 import Data.Ix (Ix (inRange))
-import Data.Map (Map, elems, mapEither, (!), (!?))
+import Data.Map.Strict (Map, elems, findMax, mapEitherWithKey, (!?))
 import qualified Data.Map.Strict as Map
-import Debug.Trace (traceShowId)
+import Data.Semigroup (Sum)
 
 dayElevenInput :: IO CellMap
 dayElevenInput = fromByteString <$> B.readFile "data/day_eleven_input.txt"
@@ -18,13 +20,11 @@ dayElevenInput = fromByteString <$> B.readFile "data/day_eleven_input.txt"
 data CellState = Taken | Empty
   deriving (Eq, Ord)
 
-data Cell = Cell {state :: !CellState, neighbours :: ![(Int, Int)]}
+instance Show CellState where
+  showsPrec _ Taken = ('#' :)
+  showsPrec _ Empty = ('L' :)
 
-instance Show Cell where
-  showsPrec _ (Cell Taken _) = ('#' :)
-  showsPrec _ (Cell Empty _) = ('L' :)
-
-type CellMap = Map (Int, Int) Cell
+type CellMap = Map (Int, Int) CellState
 
 fromByteString :: B.ByteString -> CellMap
 fromByteString bs =
@@ -38,47 +38,49 @@ fromByteString bs =
         Nothing -> cells
         Just (next, '\n') -> loop (w - 1, y - 1) next cells
         Just (next, 'L') ->
-          let neighbours =
-                [ (nx, ny)
-                  | nx <- [(x - 1) .. (x + 1)],
-                    ny <- [(y - 1) .. (y + 1)],
-                    (x, y) /= (nx, ny),
-                    lookupXY nx ny == Just 'L'
-                ]
-           in ((x, y), Cell Empty neighbours) : loop (x - 1, y) next cells
+          ((x, y), Empty) : loop (x - 1, y) next cells
         Just (next, _) -> loop (x - 1, y) next cells
-
-    lookupXY x y
-        | inRange ((0, 0), (w - 1, h - 1)) (x, y) =
-            Just $ B.index bs $ max 0 ((w + 1) * y) + x
-        | otherwise  = Nothing
 
 printMap :: CellMap -> IO ()
 printMap cells =
   let (w, h) = fst $ Map.findMax cells
-  in
-    forM_ [0 .. h] $ \y ->
-      print $ mconcat (map (maybe "." show . (cells !?) . (,y)) [0 .. w])
+   in forM_ [0 .. h] $ \y ->
+        print $ mconcat (map (maybe "." show . (cells !?) . (,y)) [0 .. w])
 
 update :: CellMap -> Maybe CellMap
 update cells =
-  let update' Cell {..}
-        | Empty <- state, (count Taken neighbours == 0) = Right (Cell Taken neighbours)
-        | Taken <- state, (count Taken neighbours >= 4) = Right (Cell Empty neighbours)
-        | otherwise = Left (Cell state neighbours)
+  let update' o cell
+        | Empty <- cell, (taken == 0) = Right Taken
+        | Taken <- cell, (taken >= 5) = Right Empty
+        | otherwise = Left cell
+        where
+          taken = sumTaken cells o
 
-      (old, new) = mapEither update' cells
+      (!old, !new) = mapEitherWithKey update' cells
    in if null new
         then Nothing
         else Just (old <> new)
+
+inMap :: CellMap -> (Int, Int) -> Bool
+inMap cells = let (limits, _) = findMax cells in inRange ((0, 0), limits)
+
+sumTaken :: CellMap -> (Int, Int) -> Sum Int
+sumTaken cells o = foldMap lookForTaken [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1)]
   where
-    count s = length . filter (== s) . map (state . (cells !))
+    lookForTaken delta = if Taken `elem` castRay cells delta o then 1 else 0
+
+castRay :: CellMap -> (Int, Int) -> (Int, Int) -> Maybe CellState
+castRay cells (dx, dy) (x, y) =
+  asum $
+    map (cells !?) $
+      takeWhile (inMap cells) $
+        iterate (bimap (+ dx) (+ dy)) (x + dx, y + dy)
 
 updateUntilStable :: CellMap -> CellMap
 updateUntilStable = fix $ \loop iter -> maybe iter loop (update iter)
 
 countOccupiedSeats :: CellMap -> Int
-countOccupiedSeats = length . filter ((== Taken) . state) . elems
+countOccupiedSeats = length . filter (== Taken) . elems
 
 sample :: B.ByteString
 sample =

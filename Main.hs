@@ -9,7 +9,7 @@ import Data.Monoid (Sum (Sum))
 import qualified Data.Sequence as Seq (sort)
 import qualified Data.Set as Set
 import DayEight (dayEightInput, fixInstructions)
-import DayEleven (updateUntilStable, countOccupiedSeats, dayElevenInput)
+import DayEleven (countOccupiedSeats, dayElevenInput, updateUntilStable)
 import DayFive (dayFiveInput, determineSeatId)
 import DayFour (dayFourInput, passportList, validPassport)
 import DayNine (dayNineInput, findContiguousSeqAddingTo, findInvalidInt)
@@ -109,4 +109,5 @@ main = do
   inputDayEleven <- dayElevenInput
   print "Day Eleven"
 
-  print ("Part One " ++ show (countOccupiedSeats (updateUntilStable inputDayEleven)))
+  print "Part One: Invalidated by changes "
+  print ("Part Two: " ++ show (countOccupiedSeats (updateUntilStable inputDayEleven)))
