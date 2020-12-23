@@ -22,6 +22,7 @@ import DaySeven (countContaining, countNestedBags, daySevenInput, rules)
 import DaySix (daySixInput, groups)
 import DayTen (countJolts, dayTenInput, possibleAdapterConfigs, steps)
 import DayThree (checkSlopes, dayThreeInput)
+import DayTwelve (dayTwelveInput, runInstructions)
 import DayTwo
   ( dayTwoInput,
     parseLine,
@@ -108,6 +109,10 @@ main = do
 
   inputDayEleven <- dayElevenInput
   print "Day Eleven"
-
   print "Part One: Invalidated by changes "
   print ("Part Two: " ++ show (countOccupiedSeats (updateUntilStable inputDayEleven)))
+
+  inputDayTwelve <- dayTwelveInput
+  print "Day Twelve"
+  let (x, y) = runInstructions inputDayTwelve
+  print ("Part One: " ++ show (abs x + abs y))
