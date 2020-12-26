@@ -115,4 +115,5 @@ main = do
   inputDayTwelve <- dayTwelveInput
   print "Day Twelve"
   let (x, y) = runInstructions inputDayTwelve
-  print ("Part One: " ++ show (abs x + abs y))
+  print "Part One: Invalidated by changes"
+  print ("Part Two: " ++ show (abs x + abs y))
