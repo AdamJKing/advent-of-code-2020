@@ -21,6 +21,7 @@ import DayOne
 import DaySeven (countContaining, countNestedBags, daySevenInput, rules)
 import DaySix (daySixInput, groups)
 import DayTen (countJolts, dayTenInput, possibleAdapterConfigs, steps)
+import DayThirteen (dayThirteenInput, findTimestamp, waitTime)
 import DayThree (checkSlopes, dayThreeInput)
 import DayTwelve (dayTwelveInput, runInstructions)
 import DayTwo
@@ -117,3 +118,10 @@ main = do
   let (x, y) = runInstructions inputDayTwelve
   print "Part One: Invalidated by changes"
   print ("Part Two: " ++ show (abs x + abs y))
+
+  inputDayThirteen <- dayThirteenInput
+  print "Day Thirteen"
+  let Just result1 = waitTime inputDayThirteen
+  print ("Part One: " ++ show result1)
+  let result2 = findTimestamp inputDayThirteen
+  print ("Part One: " ++ show result2)
